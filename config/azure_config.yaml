@@ -1,0 +1,214 @@
+# ============================================================
+# Azure AI Platform Engineering — Configuration
+# Author: Ramy Amer
+# ============================================================
+# Wire all Azure service endpoints, deployments, and resource IDs here.
+# Never commit secrets — use Azure Key Vault or environment variables.
+
+azure:
+  subscription_id:    "${AZURE_SUBSCRIPTION_ID}"
+  resource_group:     "${AZURE_RESOURCE_GROUP}"
+  location:           "australiaeast"
+  tenant_id:          "${AZURE_TENANT_ID}"
+  client_id:          "${AZURE_CLIENT_ID}"           # Service principal app ID
+  client_secret:      "${AZURE_CLIENT_SECRET}"       # Use Key Vault in production
+
+# ------------------------------------------------------------
+# Azure OpenAI Service
+# ------------------------------------------------------------
+azure_openai:
+  endpoint:           "${AZURE_OPENAI_ENDPOINT}"     # https://<name>.openai.azure.com/
+  api_key:            "${AZURE_OPENAI_API_KEY}"
+  api_version:        "2024-10-21"
+
+  deployments:
+    gpt4o:            "gpt-4o"
+    gpt4o_mini:       "gpt-4o-mini"
+    gpt4_turbo:       "gpt-4-turbo"
+    o1_preview:       "o1-preview"
+    o1_mini:          "o1-mini"
+    text_embed_3_large: "text-embedding-3-large"
+    text_embed_3_small: "text-embedding-3-small"
+    text_embed_ada:   "text-embedding-ada-002"
+    dall_e_3:         "dall-e-3"
+    whisper:          "whisper"
+
+  inference:
+    max_tokens:       4096
+    temperature:      0.1
+    top_p:            0.95
+    frequency_penalty: 0.0
+    presence_penalty:  0.0
+    timeout_seconds:   120
+    retry_attempts:    3
+
+  streaming:
+    enabled: true
+
+# ------------------------------------------------------------
+# Azure AI Foundry (formerly Azure ML Studio)
+# ------------------------------------------------------------
+ai_foundry:
+  project_name:       "${AI_FOUNDRY_PROJECT_NAME}"
+  hub_name:           "${AI_FOUNDRY_HUB_NAME}"
+  connection_string:  "${AI_FOUNDRY_CONNECTION_STRING}"
+
+  model_catalog:
+    # Open models available via AI Foundry
+    phi3_medium:      "Phi-3-medium-128k-instruct"
+    phi3_mini:        "Phi-3-mini-4k-instruct"
+    mistral_large:    "Mistral-large"
+    llama3_70b:       "Meta-Llama-3-70B-Instruct"
+    cohere_command:   "Cohere-command-r-plus"
+
+  online_endpoints:
+    phi3_endpoint:    "${PHI3_ENDPOINT_NAME}"
+    llama_endpoint:   "${LLAMA_ENDPOINT_NAME}"
+
+# ------------------------------------------------------------
+# Azure AI Search (formerly Cognitive Search)
+# ------------------------------------------------------------
+ai_search:
+  endpoint:           "${AZURE_SEARCH_ENDPOINT}"     # https://<name>.search.windows.net
+  api_key:            "${AZURE_SEARCH_API_KEY}"
+  api_version:        "2024-07-01"
+
+  indexes:
+    documents:        "azure-ai-platform-documents"
+    knowledge:        "azure-ai-platform-knowledge"
+
+  retrieval:
+    top_k:            10
+    semantic_config:  "default"
+    query_type:       "semantic"                     # simple | full | semantic | vector | hybrid
+
+  vector:
+    profile_name:     "vector-profile"
+    algorithm:        "hnsw"
+    dimensions:       3072                           # text-embedding-3-large
+    similarity:       "cosine"
+
+# ------------------------------------------------------------
+# Azure AI Content Safety
+# ------------------------------------------------------------
+content_safety:
+  endpoint:           "${CONTENT_SAFETY_ENDPOINT}"
+  api_key:            "${CONTENT_SAFETY_API_KEY}"
+  api_version:        "2024-09-01"
+
+  thresholds:
+    hate:             2                              # 0=safe, 2=low, 4=medium, 6=high
+    self_harm:        2
+    sexual:           2
+    violence:         2
+
+  groundedness:
+    enabled:          true
+    threshold:        0.7
+
+  prompt_shield:
+    enabled:          true
+
+# ------------------------------------------------------------
+# Prompt Flow
+# ------------------------------------------------------------
+prompt_flow:
+  workspace_name:     "${AML_WORKSPACE_NAME}"
+  flow_path:          "flows/"
+  runtime_name:       "${PF_RUNTIME_NAME}"
+
+  evaluation_flows:
+    rag_eval:         "flows/rag_evaluation"
+    qa_eval:          "flows/qa_evaluation"
+
+# ------------------------------------------------------------
+# Semantic Kernel
+# ------------------------------------------------------------
+semantic_kernel:
+  default_service:    "azure_openai"
+  planner:            "stepwise"                     # stepwise | handlebars | sequential
+  memory_store:       "azure_ai_search"
+
+  plugins_path:       "src/orchestration/plugins"
+
+  telemetry:
+    enabled:          true
+    otlp_endpoint:    "${OTLP_ENDPOINT}"
+
+# ------------------------------------------------------------
+# Azure ML (SageMaker equivalent)
+# ------------------------------------------------------------
+azure_ml:
+  workspace_name:     "${AML_WORKSPACE_NAME}"
+  resource_group:     "${AZURE_RESOURCE_GROUP}"
+  subscription_id:    "${AZURE_SUBSCRIPTION_ID}"
+
+  compute:
+    training_cluster: "${AML_TRAINING_CLUSTER}"      # e.g. gpu-cluster
+    inference_cluster: "${AML_INFERENCE_CLUSTER}"
+    training_vm_size: "Standard_NC6s_v3"
+    inference_vm_size: "Standard_DS3_v2"
+
+  experiments:
+    default:          "azure-ai-platform-experiments"
+
+  model_registry:
+    name:             "azure-ai-platform-models"
+
+  pipelines:
+    default_name:     "azure-ai-platform-pipeline"
+
+  mlflow:
+    tracking_uri:     "${MLFLOW_TRACKING_URI}"
+    experiment_name:  "azure-ai-platform"
+
+# ------------------------------------------------------------
+# Azure Document Intelligence (formerly Form Recognizer)
+# ------------------------------------------------------------
+document_intelligence:
+  endpoint:           "${DOCUMENT_INTELLIGENCE_ENDPOINT}"
+  api_key:            "${DOCUMENT_INTELLIGENCE_API_KEY}"
+  api_version:        "2024-07-31-preview"
+
+  models:
+    prebuilt_layout:  "prebuilt-layout"
+    prebuilt_invoice: "prebuilt-invoice"
+    prebuilt_receipt: "prebuilt-receipt"
+    prebuilt_id:      "prebuilt-idDocument"
+    prebuilt_contract: "prebuilt-contract"
+    custom_model_id:  "${CUSTOM_MODEL_ID}"
+
+# ------------------------------------------------------------
+# Storage
+# ------------------------------------------------------------
+storage:
+  account_name:       "${STORAGE_ACCOUNT_NAME}"
+  connection_string:  "${STORAGE_CONNECTION_STRING}"
+  containers:
+    raw_data:         "raw-data"
+    processed:        "processed-data"
+    model_artifacts:  "model-artifacts"
+    eval_results:     "evaluation-results"
+
+# ------------------------------------------------------------
+# Key Vault
+# ------------------------------------------------------------
+key_vault:
+  vault_url:          "${KEY_VAULT_URL}"             # https://<name>.vault.azure.net/
+
+# ------------------------------------------------------------
+# Observability
+# ------------------------------------------------------------
+observability:
+  application_insights:
+    connection_string: "${APPLICATIONINSIGHTS_CONNECTION_STRING}"
+    instrumentation_key: "${APPINSIGHTS_INSTRUMENTATIONKEY}"
+
+  log_analytics:
+    workspace_id:     "${LOG_ANALYTICS_WORKSPACE_ID}"
+    workspace_key:    "${LOG_ANALYTICS_WORKSPACE_KEY}"
+
+  opentelemetry:
+    enabled:          true
+    service_name:     "azure-ai-platform"
+    otlp_endpoint:    "${OTLP_ENDPOINT}"

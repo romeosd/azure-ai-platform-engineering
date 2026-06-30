@@ -1,5 +1,7 @@
 # Azure AI Platform Engineering
 
+![Cross-Cloud AgentOps Architecture](docs/images/ibm_multicloud_agentops.png)
+
 ![Python](https://img.shields.io/badge/Python-3.12-blue?logo=python&logoColor=white)
 ![Azure](https://img.shields.io/badge/Azure-OpenAI%20%7C%20AI%20Search%20%7C%20Foundry-0078d4?logo=microsoftazure&logoColor=white)
 ![Semantic Kernel](https://img.shields.io/badge/Semantic%20Kernel-1.3+-purple?logo=microsoft&logoColor=white)
